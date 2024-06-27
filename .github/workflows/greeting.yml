@@ -1,10 +1,12 @@
 name: First Workflow
 on: workflow_dispatch
 jobs:
+  # your own job name
   first-job:
     runs-on: ubuntu-latest
     steps:
-      - name: Print greeting
-        run: echo "Hello World"
-      - name: Print Good Bye
-        run: echo "Good Bye"
+      # name step to have multi-line step
+      - name: Hello and Good Bye
+        run: |
+          echo "Hello World"
+          echo "Good Bye"
