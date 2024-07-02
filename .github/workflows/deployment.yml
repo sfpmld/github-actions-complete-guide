@@ -18,6 +18,8 @@ jobs:
       - name: Run tests
         run: npm test
   deploy:
+    # to run the deployment only when the test job is successful...
+    needs: [test] # array of jobs to wait for
     runs-on: ubuntu-latest
     steps:
       - name: Get code
