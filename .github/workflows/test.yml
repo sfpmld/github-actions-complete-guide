@@ -1,0 +1,19 @@
+name: Test Project
+on: push
+jobs:
+  test:
+    # Notice: ubuntu runner comes with node.js pre installed
+    runs-on: ubuntu-latest
+    steps:
+      # download the code from the repository
+      - name: Get code
+        uses: actions/checkout@v4
+      # To fix a node.js version
+      - name: Install NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - name: install dependencies
+        run: npm ci # to ensure you don't install some breaking versions
+      - name: Run tests
+        run: npm test
