@@ -1,8 +1,24 @@
 name: Deploy Project
 on: [push, workflow_dispatch]
 jobs:
-  test:
+  lint:
     # Notice: ubuntu runner comes with node.js pre installed
+    runs-on: ubuntu-latest
+    steps:
+      # download the code from the repository
+      - name: Get code
+        uses: actions/checkout@v4
+      # To fix a node.js version
+      - name: Install NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - name: install dependencies
+        run: npm ci # to ensure you don't install some breaking versions
+      - name: run linter
+        run: npm run lint
+  test:
+    needs: [lint]
     runs-on: ubuntu-latest
     steps:
       # download the code from the repository
@@ -17,9 +33,11 @@ jobs:
         run: npm ci # to ensure you don't install some breaking versions
       - name: Run tests
         run: npm test
+      - name: Build code
+        run: npm run build
   deploy:
     # to run the deployment only when the test job is successful...
-    needs: [test] # array of jobs to wait for
+    needs: [lint, test] # array of jobs to wait for
     runs-on: ubuntu-latest
     steps:
       - name: Get code
