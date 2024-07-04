@@ -1,5 +1,8 @@
 name: Deploy Project
-on: [push, workflow_dispatch]
+on:
+  pull_request:
+    types: [opened]
+  workflow_dispatch:
 jobs:
   lint:
     # Notice: ubuntu runner comes with node.js pre installed
