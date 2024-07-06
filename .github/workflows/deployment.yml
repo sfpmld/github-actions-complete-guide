@@ -3,6 +3,13 @@ on:
   pull_request:
     types: [opened, synchronize]
   workflow_dispatch:
+  push:
+    branches:
+      - main
+      - fix-*
+      - feat/**
+    paths-ignore:
+      - wofkflows/*
 jobs:
   lint:
     # Notice: ubuntu runner comes with node.js pre installed
