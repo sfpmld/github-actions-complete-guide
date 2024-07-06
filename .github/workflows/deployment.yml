@@ -47,6 +47,13 @@ jobs:
         run: npm test
       - name: Build code
         run: npm run build
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: |
+            dist
+            package.json
   deploy:
     # to run the deployment only when the test job is successful...
     needs: [lint, test] # array of jobs to wait for
