@@ -45,23 +45,50 @@ jobs:
         run: npm ci # to ensure you don't install some breaking versions
       - name: Run tests
         run: npm test
+  build:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    outputs:
+      script_file: ${{ steps.publish_js_filename.outputs.script_file }}
+    steps:
+      # download the code from the repository
+      - name: Get code
+        uses: actions/checkout@v4
+      # To fix a node.js version
+      - name: Install NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+      - name: install dependencies
+        run: npm ci # to ensure you don't install some breaking versions
       - name: Build code
         run: npm run build
+      - name: Publish JS filename
+        id: publish_js_filename
+        run: |
+          find dist/assets/*.js -type f -exec echo 'script_file={}' >> $GITHUB_OUTPUT ';'
+          cat "$GITHUB_OUTPUT"
+        # soon deprecated
+        # run: find dist/assets/*.js -type f -execdir echo '::set-output name=script-file::{}' ';'
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build
+          name: built-artifacts
           path: dist
   deploy:
     # to run the deployment only when the test job is successful...
-    needs: [lint, test] # array of jobs to wait for
+    needs: [lint, test, build] # array of jobs to wait for
     runs-on: ubuntu-latest
     steps:
       - name: Get build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build
+          name: built-artifacts
       - name: Output built files
         run: ls -la
+      - name: Output file name
+        # needs object contains all output of jobs
+        run: |
+          echo "${{ needs.build.outputs.script_file }}"
       - name: Deploy
         run: echo "Deploying project..."
