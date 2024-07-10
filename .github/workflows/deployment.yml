@@ -25,6 +25,12 @@ jobs:
           node-version: "18"
       - name: info on kind of event triggering the workflow
         run: echo '${{ toJSON(github.event) }}'
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm # npm cache folder path
+          # key to retrieve the cache
+          key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
       - name: install dependencies
         run: npm ci # to ensure you don't install some breaking versions
       - name: run linter
@@ -41,6 +47,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "18"
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm # npm cache folder path
+          # key to retrieve the cache
+          key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
       - name: install dependencies
         run: npm ci # to ensure you don't install some breaking versions
       - name: Run tests
@@ -59,6 +71,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "18"
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm # npm cache folder path
+          # key to retrieve the cache
+          key: deps-node-module-${{ hashFiles('**/package-lock.json') }}
       - name: install dependencies
         run: npm ci # to ensure you don't install some breaking versions
       - name: Build code
