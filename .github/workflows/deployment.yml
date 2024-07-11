@@ -38,10 +38,11 @@ jobs:
       - name: run linter
         run: npm run lint
   test:
+    environment: dev
     env:
       MONGODB_CLUSTER_ADDRESS: gha-udemy.njl9hgv.mongodb.net
       MONGODB_USERNAME: lambda
-      MONGODB_PASSWORD: bN66ZWSga9pJ4GUF
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
       PORT: 8080
     needs: [lint]
     runs-on: ubuntu-latest
